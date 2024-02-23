@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/koron/funddb/internal/ammufg"
 	"github.com/koron/funddb/internal/fidelity"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -47,6 +48,8 @@ func get(ctx context.Context, name string) (FundDataSource, error) {
 	switch scheme {
 	case "fidelity":
 		return fidelity.Get(ctx, id)
+	case "ammufg":
+		return ammufg.Get(ctx, ammufg.CodeTypeFund, id)
 	default:
 		return nil, fmt.Errorf("unknown scheme: %s", scheme)
 	}
@@ -111,7 +114,7 @@ func run(ctx context.Context, dbfile string, items []string) error {
 		d, err := get(ctx, item)
 		if err != nil {
 			commit = false
-			return err
+			return fmt.Errorf("failed to get %q: %w", item, err)
 		}
 		err = insertFundData(tx, fill(d))
 		if err != nil {
