@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"database/sql"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -85,7 +86,10 @@ func insertFundData(tx *sql.Tx, d FundData) error {
 	return err
 }
 
-func run(ctx context.Context, dbfile string, items []string) error {
+func run1(ctx context.Context, dbfile string, items []string) error {
+	if len(items) == 0 {
+		return errors.New("no items")
+	}
 	db, err := sql.Open("sqlite3", dbfile)
 	if err != nil {
 		return err
@@ -158,10 +162,7 @@ func main() {
 		}
 	}
 
-	if len(args) == 0 {
-		log.Fatal("no items")
-	}
-	err := run(context.Background(), *dbfile, args)
+	err := run1(context.Background(), *dbfile, args)
 	if err != nil {
 		log.Fatal(err)
 	}
