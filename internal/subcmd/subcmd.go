@@ -2,6 +2,7 @@ package subcmd
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -114,15 +115,19 @@ func Run(ctx context.Context, r Runner, args ...string) error {
 
 // BackgroundWithName returns context.Context which have executable name as
 // root of subcmd.
+// Deprecated.
 func BackgroundWithName() context.Context {
+	return context.WithValue(context.Background(), keyNames, []string{RootName()})
+}
+
+func RootName() string {
 	exe, err := os.Executable()
 	if err != nil {
 		panic(fmt.Sprintf("failed to obtain executable name: %s", err))
 	}
 	_, name := filepath.Split(exe)
 	ext := filepath.Ext(name)
-	name = name[:len(name)-len(ext)]
-	return context.WithValue(context.Background(), keyNames, []string{name})
+	return name[:len(name)-len(ext)]
 }
 
 // Names retrives names layer of current sub command.
@@ -131,4 +136,9 @@ func Names(ctx context.Context) []string {
 		return names
 	}
 	return nil
+}
+
+func NewFlagSet(ctx context.Context) *flag.FlagSet {
+	name := strings.Join(Names(ctx), " ")
+	return flag.NewFlagSet(name, flag.ExitOnError)
 }

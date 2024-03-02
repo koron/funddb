@@ -86,7 +86,7 @@ func insertFundData(tx *sql.Tx, d FundData) error {
 	return err
 }
 
-func run1(ctx context.Context, dbfile string, items []string) error {
+func run(ctx context.Context, dbfile string, items []string) error {
 	if len(items) == 0 {
 		return errors.New("no items")
 	}
@@ -146,7 +146,7 @@ func loadItems(name string) ([]string, error) {
 	return out, nil
 }
 
-func main() {
+func main1() {
 	dbfile := flag.String("d", "fund.db", `database file`)
 	itemfile := flag.String("i", "", `items file`)
 	flag.Parse()
@@ -162,8 +162,12 @@ func main() {
 		}
 	}
 
-	err := run1(context.Background(), *dbfile, args)
+	err := run(context.Background(), *dbfile, args)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func main() {
+	main1()
 }

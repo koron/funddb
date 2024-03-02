@@ -2,74 +2,21 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"time"
+	"log"
+	"os"
 
-	"xorm.io/xorm"
-	"xorm.io/xorm/names"
+	"github.com/koron/funddb/internal/subcmd"
+	"github.com/koron/funddb/subcmds/fund"
 )
 
-var initStatements []string = []string{
-	`CREATE TABLE IF NOT EXISTS funds (
-		id TEXT PRIMARY KEY NOT NULL,
-		name TEXT NOT NULL,
-		url TEXT NOT NULL,
-		fetch_id TEXT NULL)`,
-	`CREATE UNIQUE INDEX IF NOT EXISTS UQE_funds_name ON funds (name)`,
-	`CREATE UNIQUE INDEX IF NOT EXISTS UQE_funds_url ON funds (url)`,
-	`CREATE UNIQUE INDEX IF NOT EXISTS UQE_funds_fetch_id ON funds (fetch_id)`,
+var commandSet = subcmd.DefineSet(subcmd.RootName(), "", fund.Set)
 
-	`CREATE TABLE IF NOT EXISTS prices (
-		id TEXT NOT NULL,
-		date DATETIME NOT NULL,
-		value INTEGER NOT NULL,
-		FOREIGN KEY (id) REFERENCES funds (id) ON DELETE CASCADE)`,
-	`CREATE INDEX IF NOT EXISTS IDX_prices_id ON prices (id)`,
-	`CREATE INDEX IF NOT EXISTS IDX_prices_date ON prices (date)`,
-	`CREATE UNIQUE INDEX IF NOT EXISTS UQE_prices_id_date ON prices (id, date)`,
-}
-
-type Fund struct {
-	ID      string `xorm:"pk"`             // Association ID
-	Name    string `xorm:"notnull unique"` // Display name
-	URL     string `xorm:"notnull unique"` // URL for the fund
-	FetchID string `xorm:"null unique"`    // Fetch ID
-}
-
-func (Fund) TableName() string {
-	return "funds"
-}
-
-type Price struct {
-	ID    string    `xorm:"notnull index unique(id_date)"` // FK:Fund.ID
-	Date  time.Time `xorm:"notnull index unique(id_date)"`
-	Value int       `xorm:"bigint not null"`
-}
-
-func (Price) TableName() string {
-	return "prices"
-}
-
-func createEngine(dbname string, verbose bool) (*xorm.Engine, error){
-	engine, err := xorm.NewEngine("sqlite3", dbname)
+func main2() {
+	err := subcmd.Run(context.Background(), commandSet, os.Args[1:]...)
+	//dbfile := flag.String("d", "fund2.db", `database file`)
+	//flag.Parse()
+	//_, err := orm.NewEngine(*dbfile, false)
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
-	engine.ShowSQL(verbose)
-	engine.SetColumnMapper(names.GonicMapper{})
-	for i, s := range initStatements {
-		_, err := engine.Exec(s)
-		if err != nil {
-			return nil, fmt.Errorf("init statement #%d failed: %w", i, err)
-		}
-	}
-	return engine, nil
-}
-
-func run2(ctx context.Context, dbfile string, args []string) error {
-	_, err := createEngine(dbfile, false)
-	if err != nil {
-		return err
-	}
-	return nil
 }
