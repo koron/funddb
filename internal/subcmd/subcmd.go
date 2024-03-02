@@ -67,6 +67,10 @@ func DefineSet(name, desc string, runners ...Runner) Set {
 	}
 }
 
+func DefineRootSet(runners ...Runner) Set {
+	return Set{Name: rootName(), Runners: runners}
+}
+
 func (s Set) name() string {
 	return s.Name
 }
@@ -113,14 +117,7 @@ func Run(ctx context.Context, r Runner, args ...string) error {
 	return r.run(ctx, args)
 }
 
-// BackgroundWithName returns context.Context which have executable name as
-// root of subcmd.
-// Deprecated.
-func BackgroundWithName() context.Context {
-	return context.WithValue(context.Background(), keyNames, []string{RootName()})
-}
-
-func RootName() string {
+func rootName() string {
 	exe, err := os.Executable()
 	if err != nil {
 		panic(fmt.Sprintf("failed to obtain executable name: %s", err))

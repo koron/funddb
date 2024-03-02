@@ -34,14 +34,6 @@ func TestCommandNil(t *testing.T) {
 	}
 }
 
-func TestBackgroundWithName(t *testing.T) {
-	ctx := subcmd.BackgroundWithName()
-	names := subcmd.Names(ctx)
-	if d := cmp.Diff([]string{"subcmd.test"}, names); d != "" {
-		t.Errorf("names unmatch: -want +got\n%s", d)
-	}
-}
-
 func TestSet(t *testing.T) {
 	var (
 		gotNames []string
