@@ -8,8 +8,6 @@ import (
 	"strings"
 )
 
-var keyNames = struct{}{}
-
 // Runner defines a base interface for Command and Set.
 // Runner interface is defined for use only with DefineSet function.
 type Runner interface {
@@ -66,6 +64,8 @@ func DefineSet(name, desc string, runners ...Runner) Set {
 	}
 }
 
+// DefineRootSet defines a set of Runners which used as root of Set (maybe
+// passed to Run).
 func DefineRootSet(runners ...Runner) Set {
 	return Set{Name: rootName(), Runners: runners}
 }
@@ -111,6 +111,8 @@ func (s Set) run(ctx context.Context, args []string) error {
 func Run(ctx context.Context, r Runner, args ...string) error {
 	return r.run(ctx, args)
 }
+
+var keyNames = struct{}{}
 
 // Names retrives names layer of current sub command.
 func Names(ctx context.Context) []string {
