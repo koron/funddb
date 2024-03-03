@@ -131,3 +131,10 @@ func TestSetFails(t *testing.T) {
 		}
 	}
 }
+
+func TestRootSet(t *testing.T) {
+	set := subcmd.DefineRootSet()
+	if d := cmp.Diff("subcmd.test", set.Name); d != "" {
+		t.Errorf("unexpected name: -want +got\n%s", d)
+	}
+}

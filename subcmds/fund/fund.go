@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"strings"
 
 	"github.com/koron/funddb/internal/orm"
 	"github.com/koron/funddb/internal/subcmd"
@@ -12,7 +13,8 @@ import (
 )
 
 func bootstrapORM(ctx context.Context, args []string, hooks ...func(fs *flag.FlagSet)) (*xorm.Engine, []string, error) {
-	fs := subcmd.NewFlagSet(ctx)
+	name := strings.Join(subcmd.Names(ctx), " ")
+	fs := flag.NewFlagSet(name, flag.ExitOnError)
 	dbfile := fs.String("dbfile", "fund2.db", "database file")
 	for _, hook := range hooks {
 		hook(fs)

@@ -2,7 +2,6 @@ package subcmd
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -108,23 +107,9 @@ func (s Set) run(ctx context.Context, args []string) error {
 	return child.run(withName(ctx, s), args[1:])
 }
 
-func withName(ctx context.Context, r Runner) context.Context {
-	return context.WithValue(ctx, keyNames, append(Names(ctx), r.name()))
-}
-
 // Run runs a Runner with ctx and args.
 func Run(ctx context.Context, r Runner, args ...string) error {
 	return r.run(ctx, args)
-}
-
-func rootName() string {
-	exe, err := os.Executable()
-	if err != nil {
-		panic(fmt.Sprintf("failed to obtain executable name: %s", err))
-	}
-	_, name := filepath.Split(exe)
-	ext := filepath.Ext(name)
-	return name[:len(name)-len(ext)]
 }
 
 // Names retrives names layer of current sub command.
@@ -135,7 +120,16 @@ func Names(ctx context.Context) []string {
 	return nil
 }
 
-func NewFlagSet(ctx context.Context) *flag.FlagSet {
-	name := strings.Join(Names(ctx), " ")
-	return flag.NewFlagSet(name, flag.ExitOnError)
+func withName(ctx context.Context, r Runner) context.Context {
+	return context.WithValue(ctx, keyNames, append(Names(ctx), r.name()))
+}
+
+func rootName() string {
+	exe, err := os.Executable()
+	if err != nil {
+		panic(fmt.Sprintf("failed to obtain executable name: %s", err))
+	}
+	_, name := filepath.Split(exe)
+	ext := filepath.Ext(name)
+	return name[:len(name)-len(ext)]
 }
