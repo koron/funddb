@@ -84,16 +84,6 @@ func (s Set) desc() string {
 	return s.Desc
 }
 
-func (s Set) runnerNames() []string {
-	a := make([]string, 0, len(s.Runners))
-	for _, r := range s.Runners {
-		if n := r.name(); n != "" {
-			a = append(a, n)
-		}
-	}
-	return a
-}
-
 // childRunner retrieves a child Runner with name
 func (s Set) childRunner(name string) Runner {
 	for _, r := range s.Runners {
@@ -157,15 +147,19 @@ func withName(ctx context.Context, r Runner) context.Context {
 	return context.WithValue(ctx, keyNames, append(Names(ctx), r.name()))
 }
 
+func stripExeExt(in string) string {
+	_, out := filepath.Split(in)
+	ext := filepath.Ext(out)
+	if ext == ".exe" {
+		return out[:len(out)-len(ext)]
+	}
+	return out
+}
+
 func rootName() string {
 	exe, err := os.Executable()
 	if err != nil {
 		panic(fmt.Sprintf("failed to obtain executable name: %s", err))
 	}
-	_, name := filepath.Split(exe)
-	ext := filepath.Ext(name)
-	if ext == ".exe" {
-		return name[:len(name)-len(ext)]
-	}
-	return name
+	return stripExeExt(exe)
 }

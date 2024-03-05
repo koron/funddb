@@ -110,16 +110,31 @@ func TestSet(t *testing.T) {
 
 func TestSetFails(t *testing.T) {
 	set := subcmd.DefineSet("fail", "",
-		subcmd.DefineCommand("list", "", nil),
-		subcmd.DefineCommand("add", "", nil),
-		subcmd.DefineCommand("delete", "", nil),
+		subcmd.DefineCommand("list", "list all entries", nil),
+		subcmd.DefineCommand("add", "add a new entry", nil),
+		subcmd.DefineCommand("delete", "delete an entry", nil),
+		subcmd.DefineSet("item", "operate items"),
 	)
 	for i, c := range []struct {
 		args []string
 		want string
 	}{
-		{[]string{}, "no commands selected.\n\nAvailable sub-commands are:\n\n\tlist\t\n\tadd\t\n\tdelete\t"},
-		{[]string{"foo"}, "command not found.\n\nAvailable sub-commands are:\n\n\tlist\t\n\tadd\t\n\tdelete\t"},
+		{[]string{}, `no commands selected.
+
+Available sub-commands are:
+
+	list        list all entries
+	add         add a new entry
+	delete      delete an entry
+	item        operate items`},
+		{[]string{"foo"}, `command not found.
+
+Available sub-commands are:
+
+	list        list all entries
+	add         add a new entry
+	delete      delete an entry
+	item        operate items`},
 	} {
 		err := subcmd.Run(context.Background(), set, c.args...)
 		if err == nil {
