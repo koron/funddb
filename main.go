@@ -1,3 +1,5 @@
+//go:build !rev2
+
 package main
 
 import (
@@ -14,7 +16,6 @@ import (
 
 	"github.com/koron/funddb/internal/ammufg"
 	"github.com/koron/funddb/internal/fidelity"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 type FundData struct {
@@ -146,7 +147,7 @@ func loadItems(name string) ([]string, error) {
 	return out, nil
 }
 
-func main1() {
+func main() {
 	dbfile := flag.String("d", "fund.db", `database file`)
 	itemfile := flag.String("i", "", `items file`)
 	flag.Parse()
@@ -166,8 +167,4 @@ func main1() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func main() {
-	main1()
 }

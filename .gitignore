@@ -2,5 +2,7 @@ tmp/
 
 *.db
 
-itemlist.txt
 funddb
+funddb.exe
+
+itemlist.txt

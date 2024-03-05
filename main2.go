@@ -1,3 +1,5 @@
+//go:build rev2
+
 package main
 
 import (
@@ -11,7 +13,7 @@ import (
 
 var commandSet = subcmd.DefineRootSet(fund.Set)
 
-func main2() {
+func main() {
 	err := subcmd.Run(context.Background(), commandSet, os.Args[1:]...)
 	if err != nil {
 		log.Fatal(err)
