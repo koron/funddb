@@ -1,6 +1,7 @@
 package subcmd
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"os"
@@ -12,6 +13,7 @@ import (
 // Runner interface is defined for use only with DefineSet function.
 type Runner interface {
 	name() string
+	desc() string
 	run(ctx context.Context, args []string) error
 }
 
@@ -36,6 +38,10 @@ func DefineCommand(name, desc string, fn CommandFunc) Command {
 
 func (c Command) name() string {
 	return c.Name
+}
+
+func (c Command) desc() string {
+	return c.Desc
 }
 
 func (c Command) run(ctx context.Context, args []string) error {
@@ -74,6 +80,10 @@ func (s Set) name() string {
 	return s.Name
 }
 
+func (s Set) desc() string {
+	return s.Desc
+}
+
 func (s Set) runnerNames() []string {
 	a := make([]string, 0, len(s.Runners))
 	for _, r := range s.Runners {
@@ -84,6 +94,7 @@ func (s Set) runnerNames() []string {
 	return a
 }
 
+// childRunner retrieves a child Runner with name
 func (s Set) childRunner(name string) Runner {
 	for _, r := range s.Runners {
 		if r.name() == name {
@@ -93,16 +104,28 @@ func (s Set) childRunner(name string) Runner {
 	return nil
 }
 
+type errorSetRun struct {
+	src Set
+	msg string
+}
+
+func (err *errorSetRun) Error() string {
+	bb := &bytes.Buffer{}
+	fmt.Fprintf(bb, "%s.\n\nAvailable sub-commands are:\n", err.msg)
+	for _, r := range err.src.Runners {
+		fmt.Fprintf(bb, "\n\t%s\t%s", r.name(), r.desc())
+	}
+	return bb.String()
+}
+
 func (s Set) run(ctx context.Context, args []string) error {
 	if len(args) == 0 {
-		names := s.runnerNames()
-		return fmt.Errorf("required one of name from: %s", names)
+		return &errorSetRun{src: s, msg: "no commands selected"}
 	}
 	name := args[0]
 	child := s.childRunner(name)
 	if child == nil {
-		names := s.runnerNames()
-		return fmt.Errorf("given %q is not one of name in: %s", name, names)
+		return &errorSetRun{src: s, msg: "command not found"}
 	}
 	return child.run(withName(ctx, s), args[1:])
 }
@@ -133,5 +156,8 @@ func rootName() string {
 	}
 	_, name := filepath.Split(exe)
 	ext := filepath.Ext(name)
-	return name[:len(name)-len(ext)]
+	if ext == ".exe" {
+		return name[:len(name)-len(ext)]
+	}
+	return name
 }

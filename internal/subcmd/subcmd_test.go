@@ -118,8 +118,8 @@ func TestSetFails(t *testing.T) {
 		args []string
 		want string
 	}{
-		{[]string{}, "required one of name from: [list add delete]"},
-		{[]string{"foo"}, "given \"foo\" is not one of name in: [list add delete]"},
+		{[]string{}, "no commands selected.\n\nAvailable sub-commands are:\n\n\tlist\t\n\tadd\t\n\tdelete\t"},
+		{[]string{"foo"}, "command not found.\n\nAvailable sub-commands are:\n\n\tlist\t\n\tadd\t\n\tdelete\t"},
 	} {
 		err := subcmd.Run(context.Background(), set, c.args...)
 		if err == nil {
