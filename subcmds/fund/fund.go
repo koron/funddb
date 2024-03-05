@@ -27,6 +27,16 @@ func bootstrapORM(ctx context.Context, args []string, hooks ...func(fs *flag.Fla
 	return engine, fs.Args(), nil
 }
 
+var Import = subcmd.DefineCommand("import", "import funds from file", func(ctx context.Context, args []string) error {
+	engine, _, err := bootstrapORM(ctx, args)
+	if err != nil {
+		return err
+	}
+	// TODO:
+	_ = engine
+	return nil
+})
+
 var List = subcmd.DefineCommand("list", "list funds", func(ctx context.Context, args []string) error {
 	engine, _, err := bootstrapORM(ctx, args)
 	if err != nil {
@@ -82,8 +92,9 @@ var Modify = subcmd.DefineCommand("modify", "modify a fund", func(ctx context.Co
 })
 
 var Set = subcmd.DefineSet("fund", "operate funds",
+	Import,
 	List,
-	Add,
-	Delete,
-	Modify,
+	//Add,
+	//Delete,
+	//Modify,
 )
