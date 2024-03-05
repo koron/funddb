@@ -42,7 +42,7 @@ func (fd FundData) Date() time.Time {
 		log.Printf("invalid date %s: %s", fd.PriceData.Nav.Date, err)
 		return time.Time{}
 	}
-	return ti.Add(time.Hour*15)
+	return ti.Add(time.Hour*18)
 }
 
 func (fd FundData) Price() int64 {
