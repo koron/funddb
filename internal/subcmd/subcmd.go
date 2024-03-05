@@ -110,10 +110,18 @@ type errorSetRun struct {
 }
 
 func (err *errorSetRun) Error() string {
+	// align width of name columns
+	var w int = 12
+	for _, r := range err.src.Runners {
+		if n := len(r.name()) + 1; n > w {
+			w = (n + 3) / 4 * 4
+		}
+	}
+	// format error message
 	bb := &bytes.Buffer{}
 	fmt.Fprintf(bb, "%s.\n\nAvailable sub-commands are:\n", err.msg)
 	for _, r := range err.src.Runners {
-		fmt.Fprintf(bb, "\n\t%s\t%s", r.name(), r.desc())
+		fmt.Fprintf(bb, "\n\t%-*s%s", w, r.name(), r.desc())
 	}
 	return bb.String()
 }
