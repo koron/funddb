@@ -3,49 +3,32 @@ package fund
 import (
 	"context"
 	"errors"
-	"flag"
 	"fmt"
-	"strings"
 
-	"github.com/koron/funddb/internal/orm"
+	"github.com/koron/funddb/internal/appcore"
+	"github.com/koron/funddb/internal/dataobj"
 	"github.com/koron/funddb/internal/subcmd"
-	"xorm.io/xorm"
 )
 
-func bootstrapORM(ctx context.Context, args []string, hooks ...func(fs *flag.FlagSet)) (*xorm.Engine, []string, error) {
-	name := strings.Join(subcmd.Names(ctx), " ")
-	fs := flag.NewFlagSet(name, flag.ExitOnError)
-	dbfile := fs.String("dbfile", "fund2.db", "database file")
-	for _, hook := range hooks {
-		hook(fs)
-	}
-	fs.Parse(args)
-	engine, err := orm.NewEngine(*dbfile, false)
-	if err != nil {
-		return nil, nil, err
-	}
-	return engine, fs.Args(), nil
-}
-
 var Import = subcmd.DefineCommand("import", "import funds from file", func(ctx context.Context, args []string) error {
-	engine, _, err := bootstrapORM(ctx, args)
+	ac, _, err := appcore.New(ctx, args)
 	if err != nil {
 		return err
 	}
 	// TODO:
-	_ = engine
+	_ = ac
 	return nil
 })
 
 var List = subcmd.DefineCommand("list", "list funds", func(ctx context.Context, args []string) error {
-	engine, _, err := bootstrapORM(ctx, args)
+	ac, _, err := appcore.New(ctx, args)
 	if err != nil {
 		return err
 	}
-	defer engine.Close()
+	defer ac.Close()
 
-	return engine.Iterate(&orm.Fund{}, func(idx int, bean interface{}) error {
-		f := bean.(*orm.Fund)
+	return ac.ORM.Iterate(&dataobj.Fund{}, func(idx int, bean interface{}) error {
+		f := bean.(*dataobj.Fund)
 		fmt.Printf("%+v\n", *f)
 		return nil
 	})
@@ -57,23 +40,23 @@ var Add = subcmd.DefineCommand("add", "add a fund", func(ctx context.Context, ar
 })
 
 var Delete = subcmd.DefineCommand("delete", "delete a fund", func(ctx context.Context, args []string) error {
-	engine, params, err := bootstrapORM(ctx, args)
+	ac, params, err := appcore.New(ctx, args)
 	if err != nil {
 		return err
 	}
-	defer engine.Close()
+	defer ac.Close()
 
 	if len(params) == 0 {
 		return errors.New("required one or more ID of fund to be deleted")
 	}
 
-	session := engine.NewSession()
+	session := ac.ORM.NewSession()
 	defer session.Close()
 	if err := session.Begin(); err != nil {
 		return err
 	}
 	for _, id := range params {
-		n, err := session.Delete(&orm.Fund{ID: id})
+		n, err := session.Delete(&dataobj.Fund{ID: id})
 		if err != nil {
 			session.Rollback()
 			return err
