@@ -2,22 +2,76 @@ package fund
 
 import (
 	"context"
+	"encoding/csv"
 	"errors"
 	"fmt"
+	"io"
+	"os"
+	"strings"
 
 	"github.com/koron/funddb/internal/appcore"
 	"github.com/koron/funddb/internal/dataobj"
 	"github.com/koron/funddb/internal/subcmd"
+	"github.com/koron/funddb/internal/xormhelper"
+	"xorm.io/xorm"
 )
 
-var Import = subcmd.DefineCommand("import", "import funds from file", func(ctx context.Context, args []string) error {
-	ac, _, err := appcore.New(ctx, args)
+func importFile(ctx context.Context, session *xorm.Session, fname string) error {
+	f, err := os.Open(fname)
 	if err != nil {
 		return err
 	}
-	// TODO:
-	_ = ac
+	defer f.Close()
+	r := csv.NewReader(f)
+	r.Comma = '\t'
+	r.Comment = '#'
+	r.ReuseRecord = true
+	for {
+		r.FieldsPerRecord = 0
+		records, err := r.Read()
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				break
+			}
+			return err
+		}
+		if len(records) < 3 {
+			return errors.New("few records, require 3 at least")
+		}
+		fund := dataobj.Fund{
+			ID:   strings.TrimSpace(records[0]),
+			Name: strings.TrimSpace(records[1]),
+			URL:  strings.TrimSpace(records[2]),
+		}
+		if len(records) >= 4 {
+			fund.FetchID = strings.TrimSpace(records[3])
+		}
+		err = xormhelper.UpsertOne(session, fund.ID, &fund)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
+}
+
+var Import = subcmd.DefineCommand("import", "import funds from file", func(ctx context.Context, args []string) error {
+	ac, files, err := appcore.New(ctx, args)
+	if err != nil {
+		return err
+	}
+	defer ac.Close()
+	if len(files) == 0 {
+		return errors.New("no files to import as fund")
+	}
+	return xormhelper.Tx(ac.ORM, func(session *xorm.Session) error {
+		for _, f := range files {
+			err := importFile(ctx, session, f)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 })
 
 var List = subcmd.DefineCommand("list", "list funds", func(ctx context.Context, args []string) error {

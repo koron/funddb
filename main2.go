@@ -9,9 +9,10 @@ import (
 
 	"github.com/koron/funddb/internal/subcmd"
 	"github.com/koron/funddb/subcmds/fund"
+	"github.com/koron/funddb/subcmds/price"
 )
 
-var commandSet = subcmd.DefineRootSet(fund.Set)
+var commandSet = subcmd.DefineRootSet(fund.Set, price.Set)
 
 func main() {
 	err := subcmd.Run(context.Background(), commandSet, os.Args[1:]...)
