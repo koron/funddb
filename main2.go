@@ -1,4 +1,4 @@
-//go:build rev2
+//go:build !rev1
 
 package main
 

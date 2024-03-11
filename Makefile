@@ -1,3 +1,3 @@
 .PHONY: run
 run:
-	go run . -i itemlist.txt
+	go run . price fetchlatest

@@ -20,7 +20,7 @@ type FlagHook func(fs *flag.FlagSet)
 func New(ctx context.Context, args []string, flagHooks ...FlagHook) (ac *Core, flagArgs []string, err error) {
 	name := strings.Join(subcmd.Names(ctx), " ")
 	fs := flag.NewFlagSet(name, flag.ExitOnError)
-	dbfile := fs.String("dbfile", "fund2.db", "database file")
+	dbfile := fs.String("dbfile", "fund.db", "database file")
 	showsql := fs.Bool("showsql", false, "show SQL for debug")
 	for _, hook := range flagHooks {
 		hook(fs)

@@ -1,4 +1,4 @@
-//go:build !rev2
+//go:build rev1
 
 package main
 
@@ -148,7 +148,7 @@ func loadItems(name string) ([]string, error) {
 }
 
 func main() {
-	dbfile := flag.String("d", "fund.db", `database file`)
+	dbfile := flag.String("d", "fund0.db", `database file`)
 	itemfile := flag.String("i", "", `items file`)
 	flag.Parse()
 
