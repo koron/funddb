@@ -13,6 +13,7 @@ import (
 	"github.com/koron/funddb/internal/subcmd"
 	"github.com/koron/funddb/internal/xormhelper"
 	"xorm.io/xorm"
+	"xorm.io/xorm/schemas"
 	//"xorm.io/xorm/schemas"
 )
 
@@ -28,14 +29,20 @@ func fetchPrice(ctx context.Context, fetchID string) (*dataobj.Price, error) {
 		if err != nil {
 			return nil, err
 		}
-		return &dataobj.Price{Date: d.Date(), Value: int(d.Price())}, nil
+		return &dataobj.Price{
+			Date:  dataobj.DateFromTime(d.Date()),
+			Value: int(d.Price()),
+		}, nil
 
 	case "ammufg":
 		d, err := ammufg.Get(ctx, ammufg.CodeTypeFund, id)
 		if err != nil {
 			return nil, err
 		}
-		return &dataobj.Price{Date: d.Date(), Value: int(d.Price())}, nil
+		return &dataobj.Price{
+			Date:  dataobj.DateFromTime(d.Date()),
+			Value: int(d.Price()),
+		}, nil
 
 	default:
 		return nil, fmt.Errorf("unknown scheme: %s", scheme)
@@ -121,7 +128,8 @@ var FetchLatest = subcmd.DefineCommand("fetchlatest", "fetch latest price data",
 					return err
 				}
 				p.ID = fund.ID
-				if err := upsertPrice(session, p); err != nil {
+				pk := schemas.PK{p.ID, p.Date}
+				if err := xormhelper.UpsertOne(session, pk, p); err != nil {
 					return err
 				}
 			}

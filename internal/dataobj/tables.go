@@ -1,7 +1,5 @@
 package dataobj
 
-import "time"
-
 type Fund struct {
 	ID      string `xorm:"pk"`             // Association ID
 	Name    string `xorm:"notnull unique"` // Display name
@@ -14,11 +12,13 @@ func (Fund) TableName() string {
 }
 
 type Price struct {
-	ID    string    `xorm:"notnull index unique(id_date)"` // FK:Fund.ID
-	Date  time.Time `xorm:"timestampz notnull index unique(id_date)"`
-	Value int       `xorm:"bigint not null"`
+	ID    string `xorm:"notnull index unique(id_date) pk"` // FK:Fund.ID
+	Date  Date   `xorm:"notnull index unique(id_date) pk"`
+	Value int    `xorm:"bigint not null"`
 }
 
 func (Price) TableName() string {
 	return "prices"
 }
+
+var Beans = []any{&Fund{}, &Price{}}

@@ -11,7 +11,8 @@ import (
 )
 
 type Core struct {
-	ORM *xorm.Engine
+	ORM     *xorm.Engine
+	ShowSQL bool
 }
 
 type FlagHook func(fs *flag.FlagSet)
@@ -25,14 +26,17 @@ func New(ctx context.Context, args []string, flagHooks ...FlagHook) (ac *Core, f
 		hook(fs)
 	}
 	fs.Parse(args)
-	orm, err := dataobj.NewEngine(*dbfile, false)
+	orm, err := dataobj.NewEngine(*dbfile)
 	if err != nil {
 		return nil, nil, err
 	}
 	if *showsql {
 		orm.ShowSQL(true)
 	}
-	return &Core{ORM: orm}, fs.Args(), nil
+	return &Core{
+		ORM:     orm,
+		ShowSQL: *showsql,
+	}, fs.Args(), nil
 }
 
 func (ac *Core) Close() error {
