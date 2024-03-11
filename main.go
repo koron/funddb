@@ -1,9 +1,12 @@
+//go:build rev1
+
 package main
 
 import (
 	"bufio"
 	"context"
 	"database/sql"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -13,7 +16,6 @@ import (
 
 	"github.com/koron/funddb/internal/ammufg"
 	"github.com/koron/funddb/internal/fidelity"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 type FundData struct {
@@ -86,6 +88,9 @@ func insertFundData(tx *sql.Tx, d FundData) error {
 }
 
 func run(ctx context.Context, dbfile string, items []string) error {
+	if len(items) == 0 {
+		return errors.New("no items")
+	}
 	db, err := sql.Open("sqlite3", dbfile)
 	if err != nil {
 		return err
@@ -143,7 +148,7 @@ func loadItems(name string) ([]string, error) {
 }
 
 func main() {
-	dbfile := flag.String("d", "fund.db", `database file`)
+	dbfile := flag.String("d", "fund0.db", `database file`)
 	itemfile := flag.String("i", "", `items file`)
 	flag.Parse()
 
@@ -158,9 +163,6 @@ func main() {
 		}
 	}
 
-	if len(args) == 0 {
-		log.Fatal("no items")
-	}
 	err := run(context.Background(), *dbfile, args)
 	if err != nil {
 		log.Fatal(err)
