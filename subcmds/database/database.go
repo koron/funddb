@@ -3,9 +3,9 @@ package database
 import (
 	"context"
 
+	"github.com/koron-go/subcmd"
 	"github.com/koron/funddb/internal/appcore"
 	"github.com/koron/funddb/internal/dataobj"
-	"github.com/koron/funddb/internal/subcmd"
 )
 
 var InitSchema = subcmd.DefineCommand("initschema", "Initialize schema by statements", func(ctx context.Context, args []string) error {

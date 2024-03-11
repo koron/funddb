@@ -6,15 +6,14 @@ import (
 	"log"
 	"strings"
 
+	"github.com/koron-go/subcmd"
 	"github.com/koron/funddb/internal/ammufg"
 	"github.com/koron/funddb/internal/appcore"
 	"github.com/koron/funddb/internal/dataobj"
 	"github.com/koron/funddb/internal/fidelity"
-	"github.com/koron/funddb/internal/subcmd"
 	"github.com/koron/funddb/internal/xormhelper"
 	"xorm.io/xorm"
 	"xorm.io/xorm/schemas"
-	//"xorm.io/xorm/schemas"
 )
 
 func fetchPrice(ctx context.Context, fetchID string) (*dataobj.Price, error) {

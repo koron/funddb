@@ -9,9 +9,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/koron-go/subcmd"
 	"github.com/koron/funddb/internal/appcore"
 	"github.com/koron/funddb/internal/dataobj"
-	"github.com/koron/funddb/internal/subcmd"
 	"github.com/koron/funddb/internal/xormhelper"
 	"xorm.io/xorm"
 )

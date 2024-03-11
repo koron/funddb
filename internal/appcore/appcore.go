@@ -5,8 +5,8 @@ import (
 	"flag"
 	"strings"
 
+	"github.com/koron-go/subcmd"
 	"github.com/koron/funddb/internal/dataobj"
-	"github.com/koron/funddb/internal/subcmd"
 	"xorm.io/xorm"
 )
 

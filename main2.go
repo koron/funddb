@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/koron/funddb/internal/subcmd"
+	"github.com/koron-go/subcmd"
 	"github.com/koron/funddb/subcmds/database"
 	"github.com/koron/funddb/subcmds/fund"
 	"github.com/koron/funddb/subcmds/price"
