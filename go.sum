@@ -25,8 +25,8 @@ github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnr
 github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
 github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 h1:Z9n2FFNUXsshfwJMBgNA0RU6/i7WVaAegv3PtuIHPMs=
 github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51/go.mod h1:CzGEWj7cYgsdH8dAjBGEr58BoE7ScuLd+fwFZ44+/x8=
-github.com/koron-go/subcmd v0.0.1 h1:pMmMK5e/nhv3RWcHoa3JUWkcQawgxLpEry0wLqrC/V0=
-github.com/koron-go/subcmd v0.0.1/go.mod h1:7yYPwJuVmG9D5xOjxUVlPfRmcAqj6mT76+tWDyjrJGs=
+github.com/koron-go/subcmd v0.0.2 h1:yo3QR7ys/DwhRmHZeyEDwxwFl0P/FSZdze9tjscdCWo=
+github.com/koron-go/subcmd v0.0.2/go.mod h1:7yYPwJuVmG9D5xOjxUVlPfRmcAqj6mT76+tWDyjrJGs=
 github.com/mattn/go-isatty v0.0.16 h1:bq3VjFmv/sOjHtdEhmkEV4x1AJtvUvOJ2PFAZ5+peKQ=
 github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
 github.com/mattn/go-sqlite3 v1.14.22 h1:2gZY6PC6kBnID23Tichd1K+Z0oS6nE/XwU+Vz/5o4kU=

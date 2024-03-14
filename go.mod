@@ -3,7 +3,7 @@ module github.com/koron/funddb
 go 1.22.0
 
 require (
-	github.com/koron-go/subcmd v0.0.1
+	github.com/koron-go/subcmd v0.0.2
 	github.com/mattn/go-sqlite3 v1.14.22
 	xorm.io/xorm v1.3.8
 )
