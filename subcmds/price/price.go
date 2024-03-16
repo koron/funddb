@@ -2,6 +2,7 @@ package price
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"strings"
@@ -82,7 +83,10 @@ func upsertPrice(session *xorm.Session, p *dataobj.Price) error {
 }
 
 var FetchLatest = subcmd.DefineCommand("fetchlatest", "fetch latest price data", func(ctx context.Context, args []string) error {
-	ac, filter, err := appcore.New(ctx, args)
+	var verbose bool
+	ac, filter, err := appcore.New(ctx, args, func(fs *flag.FlagSet) {
+		fs.BoolVar(&verbose, "verbose", false, "verbose messages")
+	})
 	if err != nil {
 		return err
 	}
@@ -121,10 +125,13 @@ var FetchLatest = subcmd.DefineCommand("fetchlatest", "fetch latest price data",
 				if fund.FetchID == "" {
 					continue
 				}
-				log.Printf("fetch latest price for %s", fund.FetchID)
+				if verbose {
+					log.Printf("fetch latest price for %s", fund.FetchID)
+				}
 				p, err := fetchPrice(ctx, fund.FetchID)
 				if err != nil {
-					return err
+					log.Printf("failed to fetch ID=%s: %v", fund.FetchID, err)
+					continue
 				}
 				p.ID = fund.ID
 				pk := schemas.PK{p.ID, p.Date}
