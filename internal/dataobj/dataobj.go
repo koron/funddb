@@ -21,6 +21,7 @@ var initStatements []string = []string{
 		id    TEXT    NOT NULL,
 		date  TEXT    NOT NULL,
 		value INTEGER NOT NULL,
+		net_assets INTEGER NULL,
 		PRIMARY KEY (id, date),
 		FOREIGN KEY (id) REFERENCES funds (id) ON DELETE CASCADE)`,
 	`CREATE INDEX IF NOT EXISTS IDX_prices_id ON prices (id)`,
