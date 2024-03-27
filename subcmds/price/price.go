@@ -123,7 +123,7 @@ var FetchLatest = subcmd.DefineCommand("fetchlatest", "fetch latest price data a
 				pd := dataobj.Price{
 					ID:    fund.ID,
 					Date:  dataobj.DateFromTime(p.Date()),
-					Value: int(p.Price()),
+					Value: p.Price(),
 				}
 				pk := schemas.PK{pd.ID, pd.Date}
 				if err := xormhelper.UpsertOne(session, pk, pd); err != nil {

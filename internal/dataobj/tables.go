@@ -14,7 +14,7 @@ func (Fund) TableName() string {
 type Price struct {
 	ID    string `xorm:"notnull index unique(id_date) pk"` // FK:Fund.ID
 	Date  Date   `xorm:"notnull index unique(id_date) pk"`
-	Value int    `xorm:"bigint not null"`
+	Value int64  `xorm:"bigint not null"`
 }
 
 func (Price) TableName() string {
