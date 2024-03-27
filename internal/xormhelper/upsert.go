@@ -4,12 +4,10 @@ import (
 	"fmt"
 
 	"xorm.io/xorm"
-	"xorm.io/xorm/schemas"
 )
 
 // UpsertOne inserts/updates exactly a row.
 func UpsertOne(session *xorm.Session, id, bean any) error {
-	schemas.NewPK()
 	updated, err := session.ID(id).Update(bean)
 	if err != nil {
 		return err

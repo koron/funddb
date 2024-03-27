@@ -12,12 +12,13 @@ import (
 	"github.com/koron/funddb/internal/appcore"
 	"github.com/koron/funddb/internal/dataobj"
 	"github.com/koron/funddb/internal/fidelity"
+	"github.com/koron/funddb/internal/fundprice"
 	"github.com/koron/funddb/internal/xormhelper"
 	"xorm.io/xorm"
 	"xorm.io/xorm/schemas"
 )
 
-func fetchPrice(ctx context.Context, fetchID string) (*dataobj.Price, error) {
+func fetchPrice(ctx context.Context, fetchID string) (fundprice.Price, error) {
 	parts := strings.SplitN(fetchID, ":", 2)
 	if len(parts) < 2 {
 		return nil, fmt.Errorf("invalid fetch ID, required format \"{scheme}:{id}\": %s", fetchID)
@@ -25,24 +26,10 @@ func fetchPrice(ctx context.Context, fetchID string) (*dataobj.Price, error) {
 	scheme, id := parts[0], parts[1]
 	switch scheme {
 	case "fidelity":
-		d, err := fidelity.Get(ctx, id)
-		if err != nil {
-			return nil, err
-		}
-		return &dataobj.Price{
-			Date:  dataobj.DateFromTime(d.Date()),
-			Value: int(d.Price()),
-		}, nil
+		return fidelity.Get(ctx, id)
 
 	case "ammufg":
-		d, err := ammufg.Get(ctx, ammufg.CodeTypeFund, id)
-		if err != nil {
-			return nil, err
-		}
-		return &dataobj.Price{
-			Date:  dataobj.DateFromTime(d.Date()),
-			Value: int(d.Price()),
-		}, nil
+		return ammufg.Get(ctx, ammufg.CodeTypeFund, id)
 
 	default:
 		return nil, fmt.Errorf("unknown scheme: %s", scheme)
@@ -82,7 +69,7 @@ func upsertPrice(session *xorm.Session, p *dataobj.Price) error {
 	return nil
 }
 
-var FetchLatest = subcmd.DefineCommand("fetchlatest", "fetch latest price data", func(ctx context.Context, args []string) error {
+var FetchLatest = subcmd.DefineCommand("fetchlatest", "fetch latest price data and put into DB", func(ctx context.Context, args []string) error {
 	var verbose bool
 	ac, filter, err := appcore.New(ctx, args, func(fs *flag.FlagSet) {
 		fs.BoolVar(&verbose, "verbose", false, "verbose messages")
@@ -133,9 +120,13 @@ var FetchLatest = subcmd.DefineCommand("fetchlatest", "fetch latest price data",
 					log.Printf("failed to fetch ID=%s: %v", fund.FetchID, err)
 					continue
 				}
-				p.ID = fund.ID
-				pk := schemas.PK{p.ID, p.Date}
-				if err := xormhelper.UpsertOne(session, pk, p); err != nil {
+				pd := dataobj.Price{
+					ID:    fund.ID,
+					Date:  dataobj.DateFromTime(p.Date()),
+					Value: int(p.Price()),
+				}
+				pk := schemas.PK{pd.ID, pd.Date}
+				if err := xormhelper.UpsertOne(session, pk, pd); err != nil {
 					return err
 				}
 			}
@@ -146,4 +137,5 @@ var FetchLatest = subcmd.DefineCommand("fetchlatest", "fetch latest price data",
 
 var Set = subcmd.DefineSet("price", "operate prices",
 	FetchLatest,
+	FetchTest,
 )
