@@ -63,6 +63,16 @@ func (fd FundData) Price() int64 {
 	return v
 }
 
+func (fd FundData) NetAssets() int64 {
+	raw := fd.HeadFundFacts.TotalNetAsset
+	v, err := raw.Int64()
+	if err != nil {
+		log.Printf("invalid net asssets %s: %s", raw, err)
+		return -1
+	}
+	return v
+}
+
 func Get(ctx context.Context, id string) (*FundData, error) {
 	u := fmt.Sprintf("https://www.fidelity.co.jp/api/ce/fdh/FundData.json?id=%s&country=jp", id)
 	req, err := http.NewRequestWithContext(ctx, "GET", u, nil)

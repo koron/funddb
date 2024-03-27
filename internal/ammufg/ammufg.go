@@ -22,7 +22,7 @@ type Dataset struct {
 	BaseDate          string `json:"base_date"`
 	CancellationPrice int64  `json:"cancellation_price"`
 
-	NetAssets                 int64       `json:"netassets"`
+	NetAssets_              int64       `json:"netassets"`
 	NetAssetsChangeCmpPrevDay json.Number `json:"netassets_change_cmp_prev_day"`
 
 	Nav int64 `json:"nav"`
@@ -102,6 +102,10 @@ func (ds Dataset) Date() time.Time {
 
 func (ds Dataset) Price() int64 {
 	return ds.CancellationPrice
+}
+
+func (ds Dataset) NetAssets() int64 {
+	return ds.NetAssets_
 }
 
 type Error struct {
