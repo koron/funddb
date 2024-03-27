@@ -10,17 +10,26 @@ import (
 )
 
 type FundData struct {
-	KeyID       string
-	DisplayName string
-	PriceData   struct {
-		ChangeAbsolute json.Number
-		ChangePercent  json.Number
-		Nav            struct {
-			Date  string
-			Value json.Number
-		}
-		SellingPrice json.Number
-	}
+	KeyID         string
+	DisplayName   string
+	HeadFundFacts HeadFundFacts
+	PriceData     PriceData
+}
+
+type HeadFundFacts struct {
+	TotalNetAsset json.Number
+}
+
+type PriceData struct {
+	ChangeAbsolute json.Number
+	ChangePercent  json.Number
+	Nav            Nav
+	SellingPrice   json.Number
+}
+
+type Nav struct {
+	Date  string
+	Value json.Number
 }
 
 func (fd FundData) Scheme() string {
@@ -42,7 +51,7 @@ func (fd FundData) Date() time.Time {
 		log.Printf("invalid date %s: %s", fd.PriceData.Nav.Date, err)
 		return time.Time{}
 	}
-	return ti.Add(time.Hour*18)
+	return ti.Add(time.Hour * 18)
 }
 
 func (fd FundData) Price() int64 {
