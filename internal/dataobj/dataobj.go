@@ -3,6 +3,7 @@ package dataobj
 import (
 	"fmt"
 
+	"github.com/koron/funddb/internal/sqlitewrap"
 	"xorm.io/xorm"
 	"xorm.io/xorm/names"
 )
@@ -30,7 +31,7 @@ var initStatements []string = []string{
 }
 
 func NewEngine(dbname string) (*xorm.Engine, error) {
-	engine, err := xorm.NewEngine("sqlite3", dbname)
+	engine, err := xorm.NewEngine(sqlitewrap.Driver, dbname)
 	if err != nil {
 		return nil, err
 	}

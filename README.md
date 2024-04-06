@@ -21,3 +21,9 @@ The format is
 
 The format of Fetch ID is `{scheme}:{id}`
 Currently `{scheme}` support `ammufg` and `fidelity` only.
+
+## Build with modernc.org/sqlite
+
+```console
+$ go install -tags modernc github.com/koron/funddb
+```
