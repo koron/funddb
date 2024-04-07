@@ -3,6 +3,7 @@ module github.com/koron/funddb
 go 1.22.0
 
 require (
+	github.com/PuerkitoBio/goquery v1.9.1
 	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/koron-go/subcmd v0.0.2
 	github.com/mattn/go-sqlite3 v1.14.22
@@ -11,6 +12,7 @@ require (
 )
 
 require (
+	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/goccy/go-json v0.8.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -24,8 +26,9 @@ require (
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
-	golang.org/x/text v0.12.0 // indirect
+	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	modernc.org/gc/v3 v3.0.0-20240107210532-573471604cb6 // indirect
 	modernc.org/libc v1.41.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
