@@ -13,6 +13,7 @@ import (
 	"github.com/koron/funddb/internal/dataobj"
 	"github.com/koron/funddb/internal/fidelity"
 	"github.com/koron/funddb/internal/fundprice"
+	"github.com/koron/funddb/internal/pictet"
 	"github.com/koron/funddb/internal/xormhelper"
 	"xorm.io/xorm"
 	"xorm.io/xorm/schemas"
@@ -30,6 +31,9 @@ func fetchPrice(ctx context.Context, fetchID string) (fundprice.Price, error) {
 
 	case "ammufg":
 		return ammufg.Get(ctx, ammufg.CodeTypeFund, id)
+
+	case "pictet":
+		return pictet.Get(ctx, id)
 
 	default:
 		return nil, fmt.Errorf("unknown scheme: %s", scheme)
