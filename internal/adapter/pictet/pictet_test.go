@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/koron/funddb/internal/pictet"
+	"github.com/koron/funddb/internal/adapter/pictet"
 )
 
 func TestGet(t *testing.T) {

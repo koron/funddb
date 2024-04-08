@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/koron/funddb/internal/fidelity"
+	"github.com/koron/funddb/internal/adapter/fidelity"
 )
 
 func TestGet(t *testing.T) {

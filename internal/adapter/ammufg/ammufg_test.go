@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/koron/funddb/internal/ammufg"
+	"github.com/koron/funddb/internal/adapter/ammufg"
 )
 
 func TestGet(t *testing.T) {
