@@ -23,6 +23,7 @@ func TestGet(t *testing.T) {
 		loc := string(c.ctype) + ":" + c.code
 		if err != nil {
 			t.Errorf("failed to get %q: %v", loc, err)
+			continue
 		}
 		if dt := d.Date(); dt.IsZero() {
 			t.Errorf("invalid date %q", loc)

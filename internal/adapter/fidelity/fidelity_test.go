@@ -18,6 +18,7 @@ func TestGet(t *testing.T) {
 		d, err := fidelity.Get(ctx, name)
 		if err != nil {
 			t.Errorf("failed to get %q: %v", name, err)
+			continue
 		}
 		if dt := d.Date(); dt.IsZero() {
 			t.Errorf("invalid date %q", name)
