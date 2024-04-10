@@ -2,7 +2,7 @@ name: Test adapters with schedule
 
 on:
   schedule:
-  - cron: '31 10 * * *'
+  - cron: '31 1 * * *'
 
 env:
   GO_VERSION: '>=1.21.0'
