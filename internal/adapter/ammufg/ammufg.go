@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"time"
@@ -22,7 +23,7 @@ type Dataset struct {
 	BaseDate          string `json:"base_date"`
 	CancellationPrice int64  `json:"cancellation_price"`
 
-	NetAssets_              int64       `json:"netassets"`
+	NetAssets_                int64       `json:"netassets"`
 	NetAssetsChangeCmpPrevDay json.Number `json:"netassets_change_cmp_prev_day"`
 
 	Nav int64 `json:"nav"`
@@ -172,6 +173,12 @@ func Get(ctx context.Context, ct CodeType, code string) (*Dataset, error) {
 	}
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusOK {
+		all, err := io.ReadAll(res.Body)
+		if err != nil {
+			log.Printf("[WARN] failed to parse error:%d response: %v", res.StatusCode, err)
+		} else {
+			log.Printf("[INFO] error:%d reponse:\n%s", res.StatusCode, string(all))
+		}
 		return nil, fmt.Errorf("failed HTTP with %d for: %q", res.StatusCode, u)
 	}
 	var data FundInfo
