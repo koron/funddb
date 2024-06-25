@@ -11,6 +11,7 @@ import (
 	"github.com/koron/funddb/internal/adapter/ammufg"
 	"github.com/koron/funddb/internal/adapter/fidelity"
 	"github.com/koron/funddb/internal/adapter/pictet"
+	"github.com/koron/funddb/internal/adapter/tokiomarineam"
 	"github.com/koron/funddb/internal/appcore"
 	"github.com/koron/funddb/internal/dataobj"
 	"github.com/koron/funddb/internal/fundprice"
@@ -34,6 +35,9 @@ func fetchPrice(ctx context.Context, fetchID string) (fundprice.Price, error) {
 
 	case "pictet":
 		return pictet.Get(ctx, id)
+
+	case "tokiomarineam":
+		return tokiomarineam.Get(ctx, id, nil)
 
 	default:
 		return nil, fmt.Errorf("unknown scheme: %s", scheme)

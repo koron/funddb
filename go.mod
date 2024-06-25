@@ -4,6 +4,7 @@ go 1.22.0
 
 require (
 	github.com/PuerkitoBio/goquery v1.9.1
+	github.com/google/go-cmp v0.6.0
 	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/koron-go/subcmd v0.0.2
 	github.com/mattn/go-sqlite3 v1.14.22
