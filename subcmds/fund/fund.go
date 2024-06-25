@@ -54,7 +54,7 @@ func importFile(ctx context.Context, session *xorm.Session, fname string) error 
 	return nil
 }
 
-var Import = subcmd.DefineCommand("import", "import funds from file", func(ctx context.Context, args []string) error {
+var Import = subcmd.DefineCommand("import", "import funds from TSV file (id, name, url, fetch_id)", func(ctx context.Context, args []string) error {
 	ac, files, err := appcore.New(ctx, args)
 	if err != nil {
 		return err
