@@ -26,7 +26,12 @@ jobs:
       with:
         go-version: ${{ env.GO_VERSION }}
 
-    - run: go test ./...
+    # Since the GitHub Actions server cannot access the test API server, we
+    # stopped testing the subpackages. In the future, we will change the tests
+    # to access the dummy server.
+    #
+    # See also https://github.com/koron/funddb/issues/5
+    - run: go test
 
     - name: Build all "main" packages
       shell: bash
