@@ -7,8 +7,8 @@ require (
 	github.com/google/go-cmp v0.7.0
 	github.com/k0kubun/pp/v3 v3.5.2
 	github.com/koron-go/subcmd v0.0.4
-	github.com/mattn/go-sqlite3 v1.14.48
-	modernc.org/sqlite v1.54.0
+	github.com/mattn/go-sqlite3 v1.14.49
+	modernc.org/sqlite v1.55.0
 	xorm.io/xorm v1.4.1
 )
 
