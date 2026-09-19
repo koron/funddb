@@ -8,7 +8,7 @@ require (
 	github.com/k0kubun/pp/v3 v3.5.2
 	github.com/koron-go/subcmd v0.0.4
 	github.com/mattn/go-sqlite3 v1.14.52
-	modernc.org/sqlite v1.58.0
+	modernc.org/sqlite v1.59.0
 	xorm.io/xorm v1.4.1
 )
 
@@ -26,7 +26,7 @@ require (
 	golang.org/x/net v0.58.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/text v0.41.0 // indirect
-	modernc.org/libc v1.75.6 // indirect
+	modernc.org/libc v1.75.7 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.12.1 // indirect
 	xorm.io/builder v0.3.13 // indirect
