@@ -8,7 +8,7 @@ require (
 	github.com/k0kubun/pp/v3 v3.5.4
 	github.com/koron-go/subcmd v0.0.4
 	github.com/mattn/go-sqlite3 v1.14.52
-	modernc.org/sqlite v1.61.0
+	modernc.org/sqlite v1.61.1
 	xorm.io/xorm v1.4.3
 )
 
